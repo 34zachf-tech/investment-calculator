@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investment Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="header">
+      <h1>Investment Calculator</h1>
+      <p class="subtitle">Project growth of a hypothetical investment with regular contributions</p>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Calculator modes">
+      <button type="button" class="tab active" role="tab" id="tab-single" aria-selected="true" aria-controls="panel-single" data-panel="panel-single">Single scenario</button>
+      <button type="button" class="tab" role="tab" id="tab-compare" aria-selected="false" aria-controls="panel-compare" data-panel="panel-compare">Compare scenarios</button>
+    </nav>
+
+    <!-- Single scenario -->
+    <section id="panel-single" class="panel active" role="tabpanel" aria-labelledby="tab-single">
+      <div class="layout">
+        <form id="form-single" class="card form-card" novalidate>
+          <h2 class="card-title">Inputs</h2>
+
+          <div class="field">
+            <label for="principal">Starting principal ($)</label>
+            <input type="number" id="principal" name="principal" min="0" step="100" value="10000" required>
+          </div>
+
+          <div class="field">
+            <label for="rate">Annual interest rate (%)</label>
+            <input type="number" id="rate" name="rate" min="0" step="0.1" value="7" required>
+          </div>
+
+          <div class="field">
+            <label for="contribution">Monthly contribution ($)</label>
+            <input type="number" id="contribution" name="contribution" min="0" step="50" value="500" required>
+          </div>
+
+          <div class="field">
+            <label for="years">Time period (years)</label>
+            <input type="number" id="years" name="years" min="1" max="100" step="1" value="20" required>
+          </div>
+
+          <div class="field">
+            <label for="compounding">Compounding frequency</label>
+            <select id="compounding" name="compounding">
+              <option value="1">Annually</option>
+              <option value="2">Semi-annually</option>
+              <option value="4">Quarterly</option>
+              <option value="12" selected>Monthly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn primary">Calculate</button>
+        </form>
+
+        <div class="results-col">
+          <div class="card results-card" id="results-single" aria-live="polite">
+            <h2 class="card-title">Results</h2>
+            <div class="metrics">
+              <div class="metric">
+                <span class="metric-label">Future value</span>
+                <span class="metric-value" id="fv">$0.00</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Total contributions</span>
+                <span class="metric-value" id="total-contrib">$0.00</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Total interest earned</span>
+                <span class="metric-value accent" id="total-interest">$0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card table-card">
+            <button type="button" class="collapse-toggle" id="toggle-breakdown" aria-expanded="true" aria-controls="breakdown-wrap">
+              <span>Year-by-year breakdown</span>
+              <span class="chevron" aria-hidden="true">&#9660;</span>
+            </button>
+            <div id="breakdown-wrap" class="breakdown-wrap">
+              <div class="table-scroll">
+                <table id="breakdown-table" class="breakdown">
+                  <thead>
+                    <tr>
+                      <th scope="col">Year</th>
+                      <th scope="col">End balance</th>
+                      <th scope="col">Contributions</th>
+                      <th scope="col">Interest</th>
+                    </tr>
+                  </thead>
+                  <tbody id="breakdown-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Compare scenarios -->
+    <section id="panel-compare" class="panel" role="tabpanel" aria-labelledby="tab-compare" hidden>
+      <form id="form-compare" class="compare-grid" novalidate>
+        <div class="card form-card scenario">
+          <h2 class="card-title scenario-a">Scenario A</h2>
+          <div class="field">
+            <label for="a-principal">Starting principal ($)</label>
+            <input type="number" id="a-principal" min="0" step="100" value="10000" required>
+          </div>
+          <div class="field">
+            <label for="a-rate">Annual interest rate (%)</label>
+            <input type="number" id="a-rate" min="0" step="0.1" value="7" required>
+          </div>
+          <div class="field">
+            <label for="a-contribution">Monthly contribution ($)</label>
+            <input type="number" id="a-contribution" min="0" step="50" value="500" required>
+          </div>
+          <div class="field">
+            <label for="a-years">Time period (years)</label>
+            <input type="number" id="a-years" min="1" max="100" step="1" value="20" required>
+          </div>
+          <div class="field">
+            <label for="a-compounding">Compounding frequency</label>
+            <select id="a-compounding">
+              <option value="1">Annually</option>
+              <option value="2">Semi-annually</option>
+              <option value="4">Quarterly</option>
+              <option value="12" selected>Monthly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+          <div class="compare-metrics" id="results-a" aria-live="polite">
+            <div class="metric compact">
+              <span class="metric-label">Future value</span>
+              <span class="metric-value" id="a-fv">$0.00</span>
+            </div>
+            <div class="metric compact">
+              <span class="metric-label">Total contributions</span>
+              <span class="metric-value" id="a-total-contrib">$0.00</span>
+            </div>
+            <div class="metric compact">
+              <span class="metric-label">Interest earned</span>
+              <span class="metric-value accent" id="a-total-interest">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card form-card scenario">
+          <h2 class="card-title scenario-b">Scenario B</h2>
+          <div class="field">
+            <label for="b-principal">Starting principal ($)</label>
+            <input type="number" id="b-principal" min="0" step="100" value="10000" required>
+          </div>
+          <div class="field">
+            <label for="b-rate">Annual interest rate (%)</label>
+            <input type="number" id="b-rate" min="0" step="0.1" value="8" required>
+          </div>
+          <div class="field">
+            <label for="b-contribution">Monthly contribution ($)</label>
+            <input type="number" id="b-contribution" min="0" step="50" value="400" required>
+          </div>
+          <div class="field">
+            <label for="b-years">Time period (years)</label>
+            <input type="number" id="b-years" min="1" max="100" step="1" value="20" required>
+          </div>
+          <div class="field">
+            <label for="b-compounding">Compounding frequency</label>
+            <select id="b-compounding">
+              <option value="1">Annually</option>
+              <option value="2">Semi-annually</option>
+              <option value="4">Quarterly</option>
+              <option value="12" selected>Monthly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+          <div class="compare-metrics" id="results-b" aria-live="polite">
+            <div class="metric compact">
+              <span class="metric-label">Future value</span>
+              <span class="metric-value" id="b-fv">$0.00</span>
+            </div>
+            <div class="metric compact">
+              <span class="metric-label">Total contributions</span>
+              <span class="metric-value" id="b-total-contrib">$0.00</span>
+            </div>
+            <div class="metric compact">
+              <span class="metric-label">Interest earned</span>
+              <span class="metric-value accent" id="b-total-interest">$0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-actions">
+          <button type="submit" class="btn primary">Compare</button>
+          <p class="diff-line" id="compare-diff" aria-live="polite"></p>
+        </div>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <p>Hypothetical only. Not financial advice. Contributions are assumed at the end of each month.</p>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
